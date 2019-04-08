@@ -1,0 +1,19 @@
+{
+  "name": "all-about-tea-backend",
+  "version": "1.0.0",
+  "description": "Node server for tea website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shachsan/all-about-tea-backend.git"
+  },
+  "author": "Sanjay Sai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shachsan/all-about-tea-backend/issues"
+  },
+  "homepage": "https://github.com/shachsan/all-about-tea-backend#readme"
+}
