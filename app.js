@@ -1,10 +1,15 @@
 const express = require('express');
 const app = express();
+const bodyParser=require('body-parser')
 
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}))
+//CORS setup start......
 app.use((req, res, next)=>{
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
-        "Acess-Control-Allow-Header",
+        "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"
     );
 
@@ -14,6 +19,7 @@ app.use((req, res, next)=>{
     );
     next();
 })
+//CORS setup end.....
 
 const products=[
     {name:'Darjeeling Tea', description:'Black tea', category:'black tea', price:22.50, priceType:'reg', brand:'Mariage', size:16, sizeUnit:'oz',imageUrl:'https://cdn.shopify.com/s/files/1/1935/9089/products/mariage-freres-darjeeling-princeton-black-tea-tin_800x.jpg?v=1497906447'},
@@ -25,9 +31,15 @@ const products=[
      {name:'Russian Blend Tea', description:'Black tea', category:'black tea', price:22.50, priceType:'reg', brand:'Palias de thes', size:16, sizeUnit:'oz', imageUrl:'http://cdn.shopify.com/s/files/1/2454/8899/products/7-citrus-russian-blend-black-tea-palais-des-thes-palais-des-thes-palais-des-thes_1024x1024.png?v=1513374900'},
 ];
 
-app.use('*', (req, res, next)=>{
+app.get('/', (req, res)=>{
     // console.log('product', products);
     res.send(products);
+})
+
+app.post('/add-product', (req, res)=>{
+    const post=req.body;
+    products.push(post);
+    res.status(201).json(post)
 })
 
 
