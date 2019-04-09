@@ -2,8 +2,9 @@
   "name": "all-about-tea-backend",
   "version": "1.0.0",
   "description": "Node server for tea website",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
+    "start":"nodemon -e html,js server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/shachsan/all-about-tea-backend/issues"
   },
-  "homepage": "https://github.com/shachsan/all-about-tea-backend#readme"
+  "homepage": "https://github.com/shachsan/all-about-tea-backend#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11"
+  }
 }
