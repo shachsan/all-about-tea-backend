@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser=require('body-parser');
 const Product = require('./models/product')
 const mongoose = require('mongoose');
+const User = require('./models/user');
+const Bcrypt = require('bcryptjs')
 
 const app = express();
 
@@ -55,6 +57,23 @@ app.post('/add-product', (req, res)=>{
     //  model name with all lowercase. For eg, in this case, our model name is 'Product'(uppercase), mongoose will create
     //  collection as 'products' if the collection doesn't already exist.
     res.status(201).json(newProduct)
+})
+
+app.post('/signup', async(req, res)=>{
+    try {
+        const credential = req.body;
+        console.log('credential received from client:', credential);
+        const user = new User(credential)
+    
+        user.password = Bcrypt.hashSync(user.password, 10)
+        console.log('credential with bycrpted password', user);
+        const result = await user.save()
+        res.status(201).json(result);
+        
+    } catch (error) {
+        console.log('error:', error);
+        res.status(500).send(error);
+    }
 })
 
 
