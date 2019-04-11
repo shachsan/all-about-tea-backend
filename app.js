@@ -1,9 +1,8 @@
 const express = require('express');
 const bodyParser=require('body-parser');
-const Product = require('./models/product')
 const mongoose = require('mongoose');
-const User = require('./models/user');
-const Bcrypt = require('bcryptjs')
+const productRouter = require('./routes/product');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -37,49 +36,12 @@ app.use((req, res, next)=>{
 })
 //CORS setup end.....
 
+app.use("/products", productRouter);
+app.use("/user", userRouter);
 
-app.get('/', (req, res)=>{
-    Product.find()
-        .then((documents)=>{
-            // console.log('documents', documents);
-            res.status(200).json(documents);
-        })
-    // res.send(products);
-})
 
-app.post('/add-product', (req, res)=>{
-    const newProduct=req.body;
-    const product = new Product(newProduct);
-    product.save(); //Here product is an model object and calling .save method provided by mongoose on this object 
-    // will do the following behind the scence
-    //* mongoose will create a document for newProduct
-    //* documents are stored in a collection, so mongoose will create a collection which will named as pural form of 
-    //  model name with all lowercase. For eg, in this case, our model name is 'Product'(uppercase), mongoose will create
-    //  collection as 'products' if the collection doesn't already exist.
-    res.status(201).json(newProduct)
-})
 
-app.post('/user/signup', async(req, res)=>{
-    try {
-        const credential = req.body;
-        console.log('credential received from client:', credential);
-        const user = new User(credential)
-    
-        user.password = Bcrypt.hashSync(user.password, 10)
-        console.log('credential with bycrpted password', user);
-        const result = await user.save()
-        res.status(201).json(result);
-        
-    } catch (error) {
-        console.log('error:', error);
-        res.status(500).send(error);
-    }
-})
 
-app.post('/user/login', req, res, next){
-    // check if the user exist with the email address
-    // if user exist, verify the password provided matches with the password in the database
-    // if password is authenticated, create a token for this user and send back to the user as response
-}
+
 
 module.exports=app;
