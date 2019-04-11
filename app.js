@@ -59,7 +59,7 @@ app.post('/add-product', (req, res)=>{
     res.status(201).json(newProduct)
 })
 
-app.post('/signup', async(req, res)=>{
+app.post('/user/signup', async(req, res)=>{
     try {
         const credential = req.body;
         console.log('credential received from client:', credential);
@@ -76,5 +76,10 @@ app.post('/signup', async(req, res)=>{
     }
 })
 
+app.post('/user/login', req, res, next){
+    // check if the user exist with the email address
+    // if user exist, verify the password provided matches with the password in the database
+    // if password is authenticated, create a token for this user and send back to the user as response
+}
 
 module.exports=app;
