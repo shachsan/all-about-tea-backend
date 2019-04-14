@@ -33,7 +33,8 @@ router.post('/login', (req, res, next)=>{
                 if(!user){
                     // console.log('=========Wrong email =============');
                     return res.status(401).json({
-                        message:"User not found"
+                        message:"User not found",
+                        success: false
                     });
                 }
                 
@@ -45,7 +46,7 @@ router.post('/login', (req, res, next)=>{
                     // console.log('result', result);
                     if(!result){
                         // console.log('=======Password did not match ==========');
-                        return res.status(401).json({message:"Auth failed"});
+                        return res.status(401).json({message:"Auth failed", success: false});
                     }
                     // console.log('==========email and password both matched=========');
                     const token = jwt.sign(
@@ -57,15 +58,16 @@ router.post('/login', (req, res, next)=>{
                     }
                         
                     console.log('=======token========', token);
-                    res.status(200).json({message: "User successfully logged in", token:token});
+                    res.status(200).json({message: "User successfully logged in", success: true, token:token});
                 }).catch(err => {
-                    res.status(401).json({error_message:err})
+                    res.status(401).json({message:err, success: false})
                 })
             })
             .catch(error=>{
                 console.log('error====>', error);
                 return res.status(401).json({
-                    message:error
+                    message:error,
+                    success: false
                 });
             });
 });
