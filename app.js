@@ -25,7 +25,7 @@ app.use((req, res, next)=>{
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
     );
 
     res.setHeader(
@@ -37,7 +37,7 @@ app.use((req, res, next)=>{
 //CORS setup end.....
 
 app.use("/products", productRouter);
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 
 
 
