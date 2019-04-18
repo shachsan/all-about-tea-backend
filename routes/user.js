@@ -29,9 +29,7 @@ router.post('/login', (req, res, next)=>{
         // console.log('=====req.body.email=======>',req.body);
         User.findOne({username:req.body.username})
             .then(user=>{
-                // console.log('=======user========>:', user);
                 if(!user){
-                    // console.log('=========Wrong email =============');
                     return res.status(401).json({
                         message:"User not found",
                         success: false,
@@ -39,7 +37,6 @@ router.post('/login', (req, res, next)=>{
                     });
                 }
                 
-                // console.log('===========Email found, checking for password match=================');
                 //below code is executed if user is found
                 // verify the password
                 Bcrypt.compare(req.body.password, user.password)
@@ -47,27 +44,24 @@ router.post('/login', (req, res, next)=>{
                     console.log('bcrypt compare returns===>', result);
                     if(!result){
                         return res.status(401).json({message:"Incorrect password", success: false, error:"wrong password"});
-
                     }
-                    // if(!result){
-                    //     // console.log('=======Password did not match ==========');
-                    // }
-                    // console.log('==========email and password both matched=========');
                     try{
                     const token = jwt.sign(
-                        {username:user.username, userId:user._id}, 
+                        {user:{userId:user._id, username:user.username, first_name:user.first_name,
+                            middle_initial:user.middle_initial,
+                            last_name:user.last_name}}, 
                         'shhhh do not tell any one', 
                         {expiresIn:'1h'})
-                        res.status(200).json({message: "User successfully logged in", success: true, token:token});
+
+                        res.status(200).json({message: "User successfully logged in", 
+                            success: true, token:token, 
+                            user:{userId:user._id, username:user.username, first_name:user.first_name,
+                                    middle_initial:user.middle_initial,
+                                    last_name:user.last_name}});
                     }catch(error){
                         res.status(401).json({message:error, success:false});
 
                     }
-                    // if(!token){
-                    //     console.log('=====token creattion error=====>>>',err);
-                    // }
-                        
-                    // console.log('=======token========', token);
                 }).catch(err => {
                     res.status(401).json({message:err, success: false})
                 })
@@ -85,8 +79,9 @@ router.post('/authenticate',(req, res)=>{
     console.log('hit /authenticate route');
     console.log('token received:', req.headers.authorization);
     try {
-        jwt.verify(req.headers.authorization, 'shhhh do not tell any one')
-        res.status(201).json({message:'Authentication success',valid:true})
+        const verifiedUser = jwt.verify(req.headers.authorization, 'shhhh do not tell any one')
+        // console.log('jwtVerifyReturns=====>', jwtVerifyReturns);
+        res.status(201).json({message:'Authentication success',valid:true, user:verifiedUser.user})
     } catch (error) {
         res.status(401).json({message:error,valid:false})
     }
