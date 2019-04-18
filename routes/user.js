@@ -72,20 +72,14 @@ router.post('/login', (req, res, next)=>{
             });
 });
 
-router.post('/authenticate', async(req, res)=>{
+router.post('/authenticate',(req, res)=>{
     console.log('hit /authenticate route');
     console.log('token received:', req.headers.authorization);
     try {
-        const tokenVerify = await jwt.verify(req.headers.authorization, 'shhhh do not tell any one')
-        if(tokenVerify){
-            console.log('in /authenticate route try block, token was verifed===>', tokenVerify );
-            return res.status(201).json({message:'Authentication success',valid:true})
-        }
-        console.log('in /authenticate route try block, token was not verified===>', tokenVerify );
-        return res.status(401).json({message:'Authentication failed',valid:false})
+        jwt.verify(req.headers.authorization, 'shhhh do not tell any one')
+        res.status(201).json({message:'Authentication success',valid:true})
     } catch (error) {
-        console.log('in /authenticate route catch block===>', tokenVerify );
-        return res.status(401).json({message:error,valid:false})
+        res.status(401).json({message:error,valid:false})
     }
 });
 
