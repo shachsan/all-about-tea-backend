@@ -34,7 +34,8 @@ router.post('/login', (req, res, next)=>{
                     // console.log('=========Wrong email =============');
                     return res.status(401).json({
                         message:"User not found",
-                        success: false
+                        success: false,
+                        error:'wrong email'
                     });
                 }
                 
@@ -43,29 +44,37 @@ router.post('/login', (req, res, next)=>{
                 // verify the password
                 Bcrypt.compare(req.body.password, user.password)
                     .then(result=>{
-                    // console.log('result', result);
+                    console.log('bcrypt compare returns===>', result);
                     if(!result){
-                        // console.log('=======Password did not match ==========');
-                        return res.status(401).json({message:"Auth failed", success: false});
+                        return res.status(401).json({message:"Incorrect password", success: false, error:"wrong password"});
+
                     }
+                    // if(!result){
+                    //     // console.log('=======Password did not match ==========');
+                    // }
                     // console.log('==========email and password both matched=========');
+                    try{
                     const token = jwt.sign(
                         {username:user.username, userId:user._id}, 
                         'shhhh do not tell any one', 
                         {expiresIn:'1h'})
-                    if(!token){
-                        console.log('=====token creattion error=====>>>',err);
+                        res.status(200).json({message: "User successfully logged in", success: true, token:token});
+                    }catch(error){
+                        res.status(401).json({message:error, success:false});
+
                     }
+                    // if(!token){
+                    //     console.log('=====token creattion error=====>>>',err);
+                    // }
                         
-                    console.log('=======token========', token);
-                    res.status(200).json({message: "User successfully logged in", success: true, token:token});
+                    // console.log('=======token========', token);
                 }).catch(err => {
                     res.status(401).json({message:err, success: false})
                 })
             })
             .catch(error=>{
                 console.log('error====>', error);
-                return res.status(401).json({
+                res.status(401).json({
                     message:error,
                     success: false
                 });
