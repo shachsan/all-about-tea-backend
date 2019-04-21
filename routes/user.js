@@ -2,6 +2,8 @@ const express = require('express');
 const User = require('../models/user');
 const Bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const authenticateUser = require('../middlewares/authenticateUser')
+
 
 const router = express.Router();
 
@@ -75,17 +77,10 @@ router.post('/login', (req, res, next)=>{
             });
 });
 
-router.post('/authenticate',(req, res)=>{
-    console.log('hit /authenticate route');
-    console.log('token received:', req.headers.authorization);
-    try {
-        const verifiedUser = jwt.verify(req.headers.authorization, 'shhhh do not tell any one')
-        // console.log('jwtVerifyReturns=====>', jwtVerifyReturns);
-        res.status(201).json({message:'Authentication success',valid:true, user:verifiedUser.user})
-    } catch (error) {
-        res.status(401).json({message:error,valid:false})
-    }
-});
+router.get('/basicinfo', (req, res, next)=>{
+    authenticateUser
+    // res.status(201).json({message:'Authentication success',valid:true, user:verifiedUser.user})
+})
 
 
 module.exports = router;
