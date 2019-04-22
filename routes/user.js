@@ -49,17 +49,13 @@ router.post('/login', (req, res, next)=>{
                     }
                     try{
                     const token = jwt.sign(
-                        {user:{userId:user._id, username:user.username, first_name:user.first_name,
-                            middle_initial:user.middle_initial,
-                            last_name:user.last_name}}, 
+                        {user}, 
                         'shhhh do not tell any one', 
                         {expiresIn:'1h'})
 
                         res.status(200).json({message: "User successfully logged in", 
                             success: true, token:token, 
-                            user:{userId:user._id, username:user.username, first_name:user.first_name,
-                                    middle_initial:user.middle_initial,
-                                    last_name:user.last_name}});
+                            user:user});
                     }catch(error){
                         res.status(401).json({message:error, success:false});
 
@@ -81,6 +77,26 @@ router.get('/basicinfo', (req, res, next)=>{
     authenticateUser
     // res.status(201).json({message:'Authentication success',valid:true, user:verifiedUser.user})
 })
+router.post(
+    '/authenticate', 
+    authenticateUser, 
+    (req, res, next)=>{
+    res.status(201).json(req.verifiedUser)
+})
+
+// router.get(
+//     '/userDetails',
+//     // authenticateUser,
+//     (req, res, next)=>{
+//         try{
+//             console.log('userId===>', req.verifiedUser.user.userId);
+//             const userDetails = User.findById(req.verifiedUser.user.userId);
+//             res.status(200).json(userDetails);
+//         } catch(err){
+//             res.status(401).json({message:'failed to retrieve user details info', error:err})
+//         }
+//     }
+// )
 
 
 module.exports = router;
